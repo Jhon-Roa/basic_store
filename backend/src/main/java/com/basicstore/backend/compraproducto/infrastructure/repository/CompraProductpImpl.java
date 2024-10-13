@@ -12,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.basicstore.backend.compraproducto.application.service.CompraProductoService;
 import com.basicstore.backend.compraproducto.domain.entity.CompraProducto;
 import com.basicstore.backend.compraproducto.domain.entity.CompraProductoPK;
+import com.basicstore.backend.compraproducto.domain.entity.CompraProductoStatus;
 import com.basicstore.backend.producto.application.service.ProductoService;
 import com.basicstore.backend.producto.domain.entity.Producto;
 
@@ -27,15 +28,18 @@ public class CompraProductpImpl implements CompraProductoService {
     @Override
     @Transactional(readOnly = true)
     public List<CompraProducto> findByCompraId(Long compraId) {
-        return compraProductoRepository.findByCompraId(compraId);
+        return compraProductoRepository.findByCompraCompraId(compraId);
     }
 
     @Override
     @Transactional
     public CompraProducto save(CompraProducto compraProducto) {
-        Producto producto = productoService.findById(compraProducto.getProductoId()).orElseThrow();
+        Producto producto = productoService.findById(compraProducto.getProducto().getProductoId()).orElseThrow();
         compraProducto.setTotal(new BigDecimal(compraProducto.getCantidad()).multiply(producto.getPrecioVenta()));
 
+        if (compraProducto.getCompraProductoStatus().equals(CompraProductoStatus.APROBADO)) {
+            producto.setStock((producto.getStock() - compraProducto.getCantidad()));
+        }
         return compraProductoRepository.save(compraProducto);
     }
 

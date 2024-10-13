@@ -1,3 +1,4 @@
+// CompraProducto.java
 package com.basicstore.backend.compraproducto.domain.entity;
 
 import java.math.BigDecimal;
@@ -11,6 +12,7 @@ import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.Id;
 import jakarta.persistence.IdClass;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
@@ -19,28 +21,29 @@ import lombok.NoArgsConstructor;
 
 @Entity
 @Table(name = "compras_productos")
-@IdClass(value =  CompraProductoPK.class)
+@IdClass(CompraProductoPK.class)
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class CompraProducto {
+    
     @Id
-    private Long compraId;
-    @Id
-    private Long productoId;
-
     @ManyToOne
-    private Compra compra;
-
-    @ManyToOne
+    @JoinColumn(name = "producto_id")
     private Producto producto;
 
+    @Id
+    @ManyToOne
+    @JoinColumn(name = "compra_id")
+    private Compra compra;
+
+    @Column(nullable = false)
     private Long cantidad;
 
-    @Column(scale = 2, precision = 16)
+    @Column(scale = 2, precision = 16, nullable = false)
     private BigDecimal total;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "estado")
+    @Column(name = "estado", nullable = false)
     private CompraProductoStatus compraProductoStatus = CompraProductoStatus.PENDIENTE;
 }

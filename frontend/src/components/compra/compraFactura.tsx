@@ -62,7 +62,7 @@ export function CompraFactura({ compra }: { compra: compra }) {
         <div className="grid gap-4 py-4">
           <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Detalles del Cliente</h3>
-            <div className="grid grid-cols-4 items-center gap-4">
+            <div className="grid grid-cols-4 items-center gap-4 border-b py-2 border-gray-300 dark:border-gray-700">
               {Object.entries(compra.cliente).map(([key, value]) => (
                 <div key={key} className="col-span-2 flex justify-between">
                   <Label className="font-medium text-gray-900 dark:text-gray-100">{key.charAt(0).toUpperCase() + key.slice(1)}:</Label>
@@ -74,11 +74,11 @@ export function CompraFactura({ compra }: { compra: compra }) {
 
           <div className="bg-gray-100 dark:bg-gray-700 p-4 rounded-lg">
             <h3 className="text-lg font-semibold text-gray-900 dark:text-gray-100">Detalles de la Compra</h3>
-            <div className="grid grid-cols-4 items-center gap-4 border-b font-medium pb-2 text-gray-900 dark:text-gray-100 border-gray-300 dark:border-gray-700">
-              <Label className="text-left">Producto</Label>
-              <Label className="text-center">Estado</Label>
-              <Label className="text-center">Cantidad</Label>
-              <Label className="text-right">Total</Label>
+            <div className="grid grid-cols-4 items-center gap-4 border-b py-2 border-gray-300 dark:border-gray-700">
+              <Label className="text-left font-bold">Producto</Label>
+              <Label className="text-center font-bold">Estado</Label>
+              <Label className="text-center font-bold">Cantidad</Label>
+              <Label className="text-right font-bold" >Total</Label>
             </div>
             {mostrarCompraProducto()}
           </div>

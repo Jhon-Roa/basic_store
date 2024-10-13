@@ -47,7 +47,6 @@ public class Compra {
     @ManyToOne
     private Cliente cliente;
 
-
     @JsonIgnore
     @OneToMany(mappedBy = "compra", cascade = CascadeType.ALL)
     private List<CompraProducto> comprasProductos;

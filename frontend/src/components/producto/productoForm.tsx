@@ -204,7 +204,11 @@ export function ProductoForm() {
       </form>
       {isCategoriaFormVisible && (
         <div className="absolute">
-          <CategoriaForm onSuccess={() => closeCategoriaForm()} onClick={() => {setCategoriaFormVisible(false)}}/>
+          <CategoriaForm 
+            onSuccess={() => closeCategoriaForm()} 
+            isOpen={isCategoriaFormVisible}
+            onClick={() => {setCategoriaFormVisible(false)}}
+          />
         </div>
       )}
     </Form>

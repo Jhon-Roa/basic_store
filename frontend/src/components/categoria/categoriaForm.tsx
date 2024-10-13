@@ -1,3 +1,5 @@
+"use client"
+
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -10,6 +12,13 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input";
 import axios from "axios";
 
@@ -18,11 +27,12 @@ const formSchema = z.object({
 });
 
 interface CategoriaFormProps {
-   onSuccess: () => void;
-   onClick: () => void;
+  onSuccess: () => void;
+  onClick: () => void;
+  isOpen: boolean;
 }
 
-export function CategoriaForm({ onSuccess, onClick }: CategoriaFormProps) {
+export function CategoriaForm({ onSuccess, onClick, isOpen }: CategoriaFormProps) {
   const apiUrl = import.meta.env.VITE_API_URL;
 
   const form = useForm<z.infer<typeof formSchema>>({
@@ -43,34 +53,38 @@ export function CategoriaForm({ onSuccess, onClick }: CategoriaFormProps) {
     }
   }
 
-  function handleOnClick() {
-    onClick();
-  }
-
   return (
-    <Form {...form}>
-      <form onSubmit={form.handleSubmit(onSubmit)} className="w-full bg-white dark:bg-black p-4 relative shadow-md rounded-lg">
-        <FormField
-          control={form.control}
-          name="nombre"
-          render={({ field }) => (
-            <FormItem>
-              <FormLabel>Nombre de la Categoría</FormLabel>
-              <FormControl>
-                <Input placeholder="Nombre de la categoría" {...field} />
-              </FormControl>
-              <FormMessage />
-            </FormItem>
-          )}
-        />
-        <Button type="submit" className="mt-3">
-          Agregar Categoría
-        </Button>
-        <Button type="button" onClick={handleOnClick} className="absolute top-0 right-0 pb-3 font-bold">
-          x
-        </Button>
-      </form>
-    </Form>
+    <Dialog open={isOpen} onOpenChange={onClick}>
+      <DialogContent className="sm:max-w-[300px]">
+        <DialogHeader>
+          <DialogTitle>
+            Formulario Cliente
+          </DialogTitle>
+        </DialogHeader>
+        <Form {...form}>
+          <form onSubmit={form.handleSubmit(onSubmit)} className="w-full p-4 relative shadow-md rounded-lg">
+            <FormField
+              control={form.control}
+              name="nombre"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Nombre de la Categoría</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Nombre de la categoría" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <DialogFooter>
+              <Button type="submit" className="mt-3">
+                Agregar Categoría
+              </Button>
+            </DialogFooter>
+          </form>
+        </Form>
+      </DialogContent>
+    </Dialog>
   );
 }
 

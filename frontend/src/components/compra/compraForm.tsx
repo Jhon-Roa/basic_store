@@ -50,21 +50,28 @@ export function CompraForm() {
     fetchProductos();
   }, [apiUrl]);
 
+  const productoSchema = z.object({
+    codigoBarras: z.string().min(1, "Debe ingresar un código de barras").refine(
+      (cod) => productos.some(p => p.codigoBarras === cod),
+      "El código de barras no existe en la lista de productos"
+    ),
+    cantidad: z.number().min(1, "Cantidad mínima 1"),
+  }).refine(data => {
+    const producto = productos.find(p => p.codigoBarras === data.codigoBarras);
+    return producto ? producto.stock >= data.cantidad : false;
+  }, {
+    message: "No hay suficientes productos en stock",
+    path: ["cantidad"], 
+  });
+  
   const formSchema = z.object({
     clienteId: z.string().min(2, "id muy corto").max(20, "id muy largo"),
     comentario: z.string().max(200, "comentario muy largo"),
     medioPago: z.string().nonempty("Seleccione un método de pago"),
     estado: z.string().nonempty("Selecciona un estado"),
-    productos: z.array(
-      z.object({
-        codigoBarras: z.string().min(1, "Debe ingresar un código de barras").refine(
-          (cod) => productos.some(p => p.codigoBarras === cod),
-          "El código de barras no existe en la lista de productos"
-        ),
-        cantidad: z.number().min(1, "Cantidad mínima 1"),
-      })
-    ).min(1, "Debe agregar al menos un producto"),
+    productos: z.array(productoSchema).min(1, "Debe agregar al menos un producto"),
   });
+  
 
   type FormSchema = z.infer<typeof formSchema>;
 
@@ -224,8 +231,8 @@ export function CompraForm() {
                     <SelectContent>
                       <SelectGroup>
                         <SelectLabel>Estados</SelectLabel>
-                        <SelectItem value="APROVADO">Pendiente</SelectItem>
-                        <SelectItem value="PENDIENTE">Realizada</SelectItem>
+                        <SelectItem value="PENDIENTE">Pendiente</SelectItem>
+                        <SelectItem value="APROBADO">Realizada</SelectItem>
                       </SelectGroup>
                     </SelectContent>
                   </Select>
